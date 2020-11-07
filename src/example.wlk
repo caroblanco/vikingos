@@ -48,11 +48,15 @@ class Granjero inherits Vikingos{
 	var hijos
 	var hectareas
 	
+	method tieneArmas() = false
+	
 	override method esProductivo() =  hectareas.div(hijos) >= 2 //hectareas * 2 >= hijos 
 	
 	method escala1(){
 		hijos +=2
 		hectareas += 2
+	}
+	method cobrarUnaVida(){
 	}
 }
 
@@ -100,7 +104,7 @@ class Expedicion{
 		}
 	}
 	
-	method botinTotal() = objetivos.sum({unO => unO.botin()})
+	method botinTotal() = objetivos.sum({unO => unO.botin(self.cantVikingos())})
 	
 	method cantVikingos() = vikingos.size()
 	
@@ -125,8 +129,8 @@ class Aldea{
 	
 	var crucifijos
 	method crucifijos() = crucifijos
-	method botin() = crucifijos
-	method valeLaPena(vikingos) = self.botin() >= 15
+	method botin(vikingos) = crucifijos
+	method valeLaPena(vikingos) = self.botin(vikingos) >= 15
 	
 	method serInvadido(vikingos){
 		crucifijos = 0
