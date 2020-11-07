@@ -1,0 +1,100 @@
+import example.*
+
+describe "VIKINGOS"{
+	var aldea = new Aldea(crucifijos = 20) 
+	var aldeaAmurallada = new AldeaAmurallada(crucifijos = 20, min = 10) 
+	var capital = new Capital(defensores = 4, factorRiqueza = 20) 
+	var soldadoArmado = new Soldado(vidas = 30,armas = 10)
+	var soldadoDesarmado = new Soldado(vidas = 30, armas = 0)
+	var granjeroProductivo = new Granjero(hijos = 2, hectareas = 4)
+	var granjeroImproductivo = new Granjero(hijos = 2, hectareas = 0)
+	var expedicion = new Expedicion(objetivos = [aldea, capital])
+		
+	method armarExpedicion(){
+		soldadoArmado.cambiarCastaA(karl)
+		expedicion.subirVikingo(granjeroProductivo)
+		expedicion.subirVikingo(soldadoArmado)
+	}
+	
+	///////////PUNTO 1
+	test "no se puede subir un jarl armado"{
+		expedicion.subirVikingo(soldadoArmado)
+		assert.notThat(expedicion.vikingos().contains(soldadoArmado))
+	}
+	test "No puedo agregar a soldado karl sin armas a la expedicion "{
+		expedicion.subirVikingo(soldadoDesarmado)
+		//assert.throwsExceptionLike(noPuedeSubirAExpedicion, { expedicion.subir(soldadoDesarmado)})
+	}
+	test "Puedo agregar soldado karl armado a la expedicion"{
+		soldadoArmado.cambiarCastaA(karl)
+		expedicion.subirVikingo(soldadoArmado)
+		assert.that(expedicion.vikingos().contains(soldadoArmado))
+	}
+	test "Puedo agregar granjero productivo a la expedicion "{
+		expedicion.subirVikingo(granjeroProductivo)
+		assert.that(expedicion.vikingos().contains(granjeroProductivo))
+	}
+	test "No puedo agregar granjero improductivo a la expedicion "{
+		expedicion.subirVikingo(granjeroImproductivo)
+		assert.notThat(expedicion.vikingos().contains(granjeroImproductivo))
+	}
+	
+	///////////PUNTO 2
+	test "Aldea vale la pena para 2 invasores"{
+		assert.that(aldea.valeLaPena(2))
+	}
+	test "Capital vale la pena para 2 invasores"{
+    	self.armarExpedicion() 
+		assert.that(capital.valeLaPena(2))
+	}
+	test "Aldea Amurallada no vale la pena para 2 invasores"{
+    	self.armarExpedicion() 
+		assert.notThat(aldeaAmurallada.valeLaPena(2))
+	}
+	
+    test "expedicion con aldea amurallada no vale la expedicion"{
+    	self.armarExpedicion() 
+    	expedicion.agregarLugar(aldeaAmurallada)
+    	assert.notThat(expedicion.valeLaPena())
+    }
+    test "expedicion vale la pena"{
+    	self.armarExpedicion() 
+    	assert.that(expedicion.valeLaPena())
+    }
+    
+    ///////////PUNTO 3
+    test "Realizar expedición disminuye crucifijos"{
+    	self.armarExpedicion()
+    	expedicion.realizarExpedicion() 
+    	assert.equals(0,aldea.crucifijos())
+    }
+    test "Realizar expedición disminuye defensores"{
+    	self.armarExpedicion()
+    	expedicion.realizarExpedicion() 
+    	assert.equals(2,capital.defensores())
+    }
+    test "Realizar expedición aumenta vidas cobradas de soldado"{
+    	self.armarExpedicion() 
+    	expedicion.realizarExpedicion()
+    	assert.equals(31,soldadoArmado.vidas())
+    }
+    test "Capital con pocos defensores al ser invadida no recompensa con vidas a todos los invasores"{
+    	self.armarExpedicion()
+    	//capital.defensores(1)
+    	expedicion.realizarExpedicion() 
+    	assert.equals(30,soldadoArmado.vidas())
+    }
+    test "Realizar expedición aumenta correctamente dinero de integrantes"{
+    	self.armarExpedicion()
+    	expedicion.realizarExpedicion() 
+    	assert.equals((2*20+20)/2,soldadoArmado.oro())
+    	assert.equals((2*20+20)/2,granjeroProductivo.oro())
+    }
+    
+     ///////////PUNTO 5
+     test "un vikingo Karl escala"{
+     	soldadoArmado.cambiarCastaA(karl)
+     	soldadoArmado.escalarSocialmente()
+     	assert.equals(thrall, soldadoArmado.casta())
+     }
+}
