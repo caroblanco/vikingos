@@ -97,9 +97,12 @@ class Expedicion{
 	method valeLaPena() = objetivos.all({unO => unO.valeLaPena(self.cantVikingos())})
 	
 	method subirVikingo(unVikingo){
-		if(unVikingo.puedeIrA(self)){
-			vikingos.add(unVikingo)
-		}else{
+		self.verificarVikingo(unVikingo)
+		vikingos.add(unVikingo)
+	}
+	
+	method verificarVikingo(unV){
+		if(unV.puedeIrA(self)){
 			self.error("EL VIKINGO NO PUEDE IR")
 		}
 	}
@@ -164,6 +167,6 @@ class Capital{
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Para agregar un nuevo objetivo castillo, este debe ser polimórfico con los otros objetivos existentes. 
-  No hace falta modificar código existente, siempre y cuando se implementen los mensajes valeLaPenaPara, botin,
-  y serInvadidoPor (y siempre y cuando no necesite más cosas del vikingo para resolver esos métodos, en cuyo caso
+  No hace falta modificar código existente, siempre y cuando se implementen los mensajes valeLaPena, botin,
+  y serInvadido (y siempre y cuando no necesite más cosas del vikingo para resolver esos métodos, en cuyo caso
   convendría pasar el vikingo por parámetro)*/
